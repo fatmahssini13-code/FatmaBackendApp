@@ -358,7 +358,11 @@ exports.approveClientWorkSubmission = async (req, res) => {
     project.adminWorkSubmission.reviewNote = "";
 
     await project.save();
-
+await Notification.create({
+  userId: project.acceptedFreelancer,
+  title: "Livrable accepté par le client ✓",
+  message: "Le client a validé votre travail. L'administration va libérer le paiement sur votre wallet.",
+});
     const io = req.app.get("socketio");
     if (io && project.acceptedFreelancer) {
       io.to(project.acceptedFreelancer.toString()).emit("notification", {
@@ -417,7 +421,11 @@ exports.rejectClientWorkSubmission = async (req, res) => {
     }
 
     await project.save();
-
+await Notification.create({
+  userId: project.acceptedFreelancer,
+  title: "Livrable à corriger",
+  message: note || "Le client demande des corrections. Renvoyez un livrable depuis le chat mission.",
+});
     const io = req.app.get("socketio");
     if (io && project.acceptedFreelancer) {
       io.to(project.acceptedFreelancer.toString()).emit("notification", {
