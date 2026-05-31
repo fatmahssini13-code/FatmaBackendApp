@@ -561,6 +561,20 @@ exports.adminReleaseOrRefund = async (req, res) => {
     }
 
     await project.save();
+    if (action === "release") {
+  // Notification → freelancer
+  await Notification.create({
+    userId: project.acceptedFreelancer,
+    title: "Paiement reçu 💸",
+    message: `L'administration a libéré le paiement pour « ${project.title} ». Vérifiez votre wallet.`,
+  });
+  // Notification → client
+  await Notification.create({
+    userId: project.owner,
+    title: "Mission terminée ✅",
+    message: `Le paiement a été envoyé au freelancer pour « ${project.title} ».`,
+  });
+}
     res.status(200).json({ message: `Action Admin : ${action} effectuée`, project });
   } catch (error) {
     res.status(500).json({ message: "Erreur Admin", error: error.message });
