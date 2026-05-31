@@ -302,7 +302,11 @@ exports.submitWorkForAdminReview = async (req, res) => {
     }
 
     await project.save();
-
+await Notification.create({
+  userId: project.owner,
+  title: "Livrable reçu 📦",
+  message: `Le freelancer a envoyé le travail pour « ${project.title} ». Ouvrez le suivi de mission pour valider.`,
+});
     const io = req.app.get("socketio");
     if (io && project.owner) {
       io.to(project.owner.toString()).emit("notification", {
