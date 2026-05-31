@@ -2,6 +2,7 @@ const Project = require("../models/project");
 const { appendWalletLedger } = require("../utils/walletLedger");
 const Proposal = require("../models/proposal");
 const User = require("../models/User");
+const Notification = require("../models/notification");
 
 // --- 1. CRÉER UN PROJET (C'est ici que l'erreur se produisait) ---
 exports.createProject = async (req, res) => {
