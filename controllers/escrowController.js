@@ -1,6 +1,6 @@
 const Project = require("../models/project");
 const User = require("../models/User");
-
+const Notification = require("../models/notification"); 
 // GET ESCROW PROJECTS
 /*exports.getEscrowProjects = async (req, res) => {
   try {
@@ -28,8 +28,6 @@ exports.getEscrowProjects = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
-
-// RELEASE FUNDS
 exports.releaseFunds = async (req, res) => {
   try {
     const { projectId } = req.body;
@@ -43,11 +41,28 @@ exports.releaseFunds = async (req, res) => {
 
     await project.save();
 
+    // ← ZID HEDHOM
+    await Notification.create({
+      userId: project.acceptedFreelancer,
+      title: "Paiement reçu 💸",
+      message: `L'administration a libéré le paiement pour « ${project.title} ». Vérifiez votre wallet.`,
+    });
+    await Notification.create({
+      userId: project.owner,
+      title: "Mission terminée ✅",
+      message: `Le paiement a été envoyé au freelancer pour « ${project.title} ».`,
+    });
+
     return res.json({ message: "Funds released" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
+3amli el modification w push! 🚀 😊
+
+
+
+
 
 // REFUND CLIENT
 exports.refundClient = async (req, res) => {
