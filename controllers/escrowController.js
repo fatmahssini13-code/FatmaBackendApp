@@ -18,24 +18,45 @@ exports.getEscrowProjects = async (req, res) => {
 exports.releaseFunds = async (req, res) => {
   try {
     const { projectId } = req.body;
+
+    console.log("projectId =", projectId);
+
     const project = await Project.findById(projectId);
-    if (!project) return res.status(404).json({ message: "Projet introuvable" });
+
+    console.log("project =", project);
+
+    if (!project) {
+      return res.status(404).json({ message: "Projet introuvable" });
+    }
+
+    console.log("owner =", project.owner);
+    console.log("acceptedFreelancer =", project.acceptedFreelancer);
+
     project.paymentStatus = "released";
     project.escrowStatus = "released";
     project.status = "completed";
+
     await project.save();
-    await Notification.create({
+
+    const notif1 = await Notification.create({
       userId: project.acceptedFreelancer,
       title: "Paiement reçu 💸",
-      message: `L'administration a libéré le paiement pour « ${project.title} ». Vérifiez votre wallet.`,
+      message: `L'administration a libéré le paiement pour « ${project.title} ».`,
     });
-    await Notification.create({
+
+    console.log("notif1 =", notif1);
+
+    const notif2 = await Notification.create({
       userId: project.owner,
       title: "Mission terminée ✅",
       message: `Le paiement a été envoyé au freelancer pour « ${project.title} ».`,
     });
+
+    console.log("notif2 =", notif2);
+
     return res.json({ message: "Funds released" });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: err.message });
   }
 };
