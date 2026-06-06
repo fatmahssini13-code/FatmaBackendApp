@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   
-  // Rôles bien définis
   role: {
     type: String,
     enum: ["client", "freelancer", "admin"],
@@ -13,22 +12,24 @@ const userSchema = new mongoose.Schema({
   },
 
   // --- CHAMPS SPÉCIFIQUES FREELANCER ---
-  speciality: { type: String }, // ex: "Designer UI/UX"
-  // On transforme skills en tableau [String] pour faciliter l'affichage des "Chips" en Flutter/Angular
-  skills: [String], 
+  speciality: { type: String },
+  skills: [String],
   bio: { type: String },
-  hourlyRate: { type: Number }, // Tarif horaire
-  
+  hourlyRate: { type: Number },
+  languages: [String],
+
   // --- CHAMPS SPÉCIFIQUES CLIENT ---
-  companyName: { type: String }, // Nom de l'entreprise ou "Particulier"
+  companyName: { type: String },
   location: { type: String },
-walletBalance: {
-  type: Number,
-  default: 0,
-},
-  /** Paiements Stripe wallet déjà crédités (évite double crédit webhook + confirm). */
+
+  // --- SOCIAL LINKS ---
+  website: { type: String, default: "" },
+  linkedin: { type: String, default: "" },
+  github: { type: String, default: "" },
+
+  // --- WALLET ---
+  walletBalance: { type: Number, default: 0 },
   processedWalletTopUpIntentIds: { type: [String], default: [] },
-  /** Historique wallet client : recharges, débits mission, remboursements. */
   walletLedger: [
     {
       type: {
@@ -42,8 +43,9 @@ walletBalance: {
       createdAt: { type: Date, default: Date.now },
     },
   ],
+
   // --- PARAMÈTRES COMMUNS ---
-  avatar: { type: String, default: "" }, // URL de la photo
+  avatar: { type: String, default: "" },
   phoneNumber: { type: String },
   isVerified: { type: Boolean, default: false },
   isBlocked: { type: Boolean, default: false },
