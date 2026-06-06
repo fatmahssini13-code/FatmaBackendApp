@@ -15,17 +15,21 @@ router.get("/profile/:email", async (req, res) => {
   try {
     const user = await findUserByEmailParam(req.params.email);
     if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
-
-    let userData = {
-      id: user._id,
-      name: user.name,
-      displayName: user.name || user.email.split("@")[0],
-      email: user.email,
-      role: user.role,
-      avatar: user.avatar || null,
-      bio: user.bio || "",
-      createdAt: user.createdAt,
-    };
+let userData = {
+  id: user._id,
+  name: user.name,
+  displayName: user.name || user.email.split("@")[0],
+  email: user.email,
+  role: user.role,
+  avatar: user.avatar || null,
+  bio: user.bio || "",
+  createdAt: user.createdAt,
+  // ── CHAMPS JDOD ──────────────────────
+  location: user.location || "",
+  website: user.website || "",
+  linkedin: user.linkedin || "",
+  github: user.github || "",
+};
 
     if (user.role === "client") {
       userData.companyName = user.companyName || "Particulier";
