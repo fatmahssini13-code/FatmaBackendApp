@@ -38,7 +38,7 @@ let userData = {
       });
     }
 
-    if (user.role === "freelancer") {
+if (user.role === "freelancer") {
       const Proposal = require("../models/proposal");
       userData.speciality = user.speciality || "Freelancer";
       userData.skills = user.skills || [];
@@ -49,6 +49,9 @@ let userData = {
         freelancer: user._id,
         status: "accepted",
       });
+      // ← ZID HEDHOM
+      userData.hourlyRate = user.hourlyRate || null;
+      userData.languages = user.languages || [];
     }
 
     res.status(200).json(userData);
